@@ -56,9 +56,7 @@ const FixConnectApp = {
         searchPlaceholder = 'Search devices...';
         pageContent = HomeComponent.render();
       } else if (this.currentView === 'devices') {
-        sectionName = 'Devices';
-        searchPlaceholder = 'Search devices...';
-        pageContent = DevicesComponent.render('devices');
+        pageContent = DevicesComponent.render();
       } else if (this.currentView === 'sessions') {
         sectionName = 'Sessions';
         searchPlaceholder = 'Search sessions...';
@@ -73,11 +71,13 @@ const FixConnectApp = {
         pageContent = SettingsComponent.render();
       }
 
+      const showTopHeader = this.currentView !== 'devices';
+
       contentHtml = `
         <div class="app-container">
           ${NavbarComponent.renderSidebar(this.currentView)}
           <main class="main-wrapper">
-            ${NavbarComponent.renderTopHeader(sectionName, searchPlaceholder)}
+            ${showTopHeader ? NavbarComponent.renderTopHeader(sectionName, searchPlaceholder, this.currentView) : ''}
             ${pageContent}
           </main>
         </div>
@@ -105,6 +105,12 @@ const FixConnectApp = {
       const remoteEl = document.getElementById('remote-live-duration');
       if (remoteEl) {
         remoteEl.innerText = this.formatTimeMinutes(this.remoteDurationSec);
+      }
+
+      // Update devices view live duration
+      const devTimerEl = document.getElementById('devices-live-duration');
+      if (devTimerEl) {
+        devTimerEl.innerText = this.formatTimeMinutes(this.remoteDurationSec);
       }
     }, 1000);
   },
